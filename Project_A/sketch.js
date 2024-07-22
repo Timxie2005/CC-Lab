@@ -1,5 +1,6 @@
 let circleX, circleY; // Current position of the main body
 let targetX, targetY; // Next position of the main body
+
 let alerting = false;
 
 let mouseSpeeds = []; // Array to store recent mouse speeds
@@ -64,7 +65,7 @@ function draw() {
 
   // Calculate the average speed
   let sumSpeed = 0;
-  for (let i = 0; i < maxSpeedAmount; i ++){
+  for (let i = 0; i < maxSpeedAmount; i++) {
     sumSpeed += mouseSpeeds[i];
   }
   let avgMouseSpeed = sumSpeed / maxSpeedAmount;
@@ -77,17 +78,16 @@ function draw() {
     // Draw the arms
     arms(circleX, circleY);
     // Make movements
-    move(true);
+    move(true, false);
   } else if (avgMouseSpeed >= 500) { // Alerting
     alerting = true;
     // Change the eye into !
     drawExclamationMark(circleX, circleY);
     // Draw the arms
     arms(circleX, circleY);
-  } else {
+  } else { // Slowly move back to the center
     alerting = false;
-    BSOD();
-    move(false);
+    move(false, true);
   }
 }
 
@@ -120,9 +120,9 @@ function caution_area() {
   }
 }
 
-// Move the creature randomly to a new position
-function move(decider) {
-  if (decider) {
+// Move the creature randomly to a new position or return to center smoothly
+function move(randomly, toCenter) {
+  if (randomly) {
     // Moving to the target position
     let dx = targetX - circleX;
     let dy = targetY - circleY;
@@ -135,25 +135,25 @@ function move(decider) {
       targetX = random(175, 625);
       targetY = random(75, 425);
     }
-  } else {
-    circleX = 400;
-    circleY = 250;
-  }
+  } else if (toCenter) {
+    // Move back to the center
+    let dx = 400 - circleX;
+    let dy = 250 - circleY;
+    circleX += dx * 0.05;
+    circleY += dy * 0.05;
+  } 
 }
 
 // Calculate the position of the bracket
 function calculatePointPosition(circleX, circleY, d) {
-  let centerX = 400;
-  let centerY = 250;
-  let radius = 112.5;
-  let a = (radius * radius - radius * radius + d * d) / (2 * d);
-  let h = sqrt(radius * radius - a * a);
-  let x2 = centerX + (a * (circleX - centerX)) / d;
-  let y2 = centerY + (a * (circleY - centerY)) / d;
-  let rx = -(circleY - centerY) * (h / d);
-  let ry = -(circleX - centerX) * (h / d);
+  let a = d / 2;
+  let h = sqrt(112.5 * 112.5 - a * a);
+  let x1 = 400 + (circleX - 400) / 2;
+  let y1 = 250 + (circleY - 250) / 2;
+  let x2 = -(circleY - 250) * (h / d);
+  let y2 = -(circleX - 400) * (h / d);
 
-  let intersectionPoint = [x2 + rx, y2 - ry];
+  let intersectionPoint = [x1 + x2, y1 - y2];
 
   return intersectionPoint;
 }
@@ -180,7 +180,7 @@ function arms(circleX, circleY) {
       push();
       rotate(angle);
       fill(255, 165, 0); // Orange
-      rect(100 + random(-3,3), -10 + random(-3,3), 60, 20);
+      rect(100 + random(-3, 3), -10 + random(-3, 3), 60, 20);
       pop();
     }
   }
@@ -194,14 +194,14 @@ function drawMonitorEye(circleX, circleY) {
   stroke(255);
   line(circleX - 40, circleY - 25, circleX + 40, circleY - 25);
   line(circleX - 40, circleY + 25, circleX + 40, circleY + 25);
-  
+
   // Calculate the eye's position
   let vectorX = circleX - 400;
   let vectorY = circleY - 250;
   let vectorLength = dist(400, 250, circleX, circleY);
   let directionX = vectorX / vectorLength;
   let directionY = vectorY / vectorLength;
-  
+
   let eyeDistance = 15; // Distance from the center of the circle
   let eyeOffsetX = directionX * eyeDistance;
   let eyeOffsetY = directionY * eyeDistance;
@@ -218,23 +218,8 @@ function drawExclamationMark(circleX, circleY) {
   push();
 
   fill(255, 165, 0);
-  ellipse(circleX+random(-3,3), circleY - 10 + random(-3,3), 10, 50);
-  circle(circleX+random(-3,3), circleY + 25 + random(-3,3), 10);
+  ellipse(circleX + random(-3, 3), circleY - 10 + random(-3, 3), 10, 50);
+  circle(circleX + random(-3, 3), circleY + 25 + random(-3, 3), 10);
 
-  pop();
-}
-
-// Function to draw a Blue Screen of Death (BSOD)
-function BSOD() {
-  push();
-  translate(400, 250);
-  rectMode(CENTER);
-  fill(0, 0, 255); // Blue background
-  rect(0, 0, 100, 75); // Monitor size
-  
-  fill(255); // White text
-  textSize(10);
-  textAlign(CENTER, CENTER);
-  text(":(\nYour PC ran into a\nproblem and needs\nto restart.\n\n0% complete", 0, 0);
   pop();
 }
