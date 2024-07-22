@@ -1,18 +1,19 @@
 let circleX, circleY; // Current position of the main body
 let targetX, targetY; // Next position of the main body
-
 let alerting = false;
+
+let mouseSpeeds = []; // Array to store recent mouse speeds
+let maxSpeedAmount = 10; // Number of recent speeds to average
 
 function setup() {
   let cnv = createCanvas(800, 500);
-  cnv.parent("p5-canvas-container")
+  cnv.parent("p5-canvas-container");
 
   // Body initial position setting
   circleX = random(175, 625); // The moving area of the creature
   circleY = random(75, 425);
   targetX = random(175, 625);
   targetY = random(75, 425);
-
 }
 
 function draw() {
@@ -33,14 +34,10 @@ function draw() {
 
   if (twoCenterDistance >= 225) {
     line(400, 250, circleX, circleY);
-  } else if(twoCenterDistance == 0){
-    //Do not show the bracket
-  }else {
-    let pointPosition = calculatePointPosition(
-      circleX,
-      circleY,
-      twoCenterDistance
-    ); // Calculate the position of the bracket connection point
+  } else if (twoCenterDistance == 0) {
+    // Do not show the bracket
+  } else {
+    let pointPosition = calculatePointPosition(circleX, circleY, twoCenterDistance); // Calculate the position of the bracket connection point
     let armX = pointPosition[0];
     let armY = pointPosition[1];
     line(400, 250, armX, armY);
@@ -58,17 +55,30 @@ function draw() {
   // Calculate the speed of the mouse
   let mouseDistance = dist(pmouseX, pmouseY, mouseX, mouseY);
   let mouseSpeed = mouseDistance / (deltaTime / 1000);
+  mouseSpeeds.push(mouseSpeed);
 
-  // Respond to the mouseSpeed
-  if (mouseSpeed == 0) { // Moving around casually
+  // Remove the oldest speed if the array is too long
+  if (mouseSpeeds.length > maxSpeedAmount) {
+    mouseSpeeds.shift();
+  }
+
+  // Calculate the average speed
+  let sumSpeed = 0;
+  for (let i = 0; i < maxSpeedAmount; i ++){
+    sumSpeed += mouseSpeeds[i];
+  }
+  let avgMouseSpeed = sumSpeed / maxSpeedAmount;
+
+  // Respond to the avgMouseSpeed
+  if (avgMouseSpeed == 0) { // Moving around casually
     alerting = false;
     // Draw the eye
-    drawMonitorEye(circleX,circleY);
+    drawMonitorEye(circleX, circleY);
     // Draw the arms
     arms(circleX, circleY);
     // Make movements
     move(true);
-  } else if (mouseSpeed >= 500) { // Alerting
+  } else if (avgMouseSpeed >= 500) { // Alerting
     alerting = true;
     // Change the eye into !
     drawExclamationMark(circleX, circleY);
@@ -76,6 +86,7 @@ function draw() {
     arms(circleX, circleY);
   } else {
     alerting = false;
+    BSOD();
     move(false);
   }
 }
@@ -111,24 +122,23 @@ function caution_area() {
 
 // Move the creature randomly to a new position
 function move(decider) {
-  if (decider){
+  if (decider) {
     // Moving to the target position
-  let dx = targetX - circleX;
-  let dy = targetY - circleY;
-  circleX += dx * 0.05;
-  circleY += dy * 0.05;
+    let dx = targetX - circleX;
+    let dy = targetY - circleY;
+    circleX += dx * 0.05;
+    circleY += dy * 0.05;
 
-  // Selecting another new position when reached the target
-  let d = dist(circleX, circleY, targetX, targetY);
-  if (d < 1) {
-    targetX = random(175, 625);
-    targetY = random(75, 425);
+    // Selecting another new position when reached the target
+    let d = dist(circleX, circleY, targetX, targetY);
+    if (d < 1) {
+      targetX = random(175, 625);
+      targetY = random(75, 425);
     }
-  }else{
+  } else {
     circleX = 400;
     circleY = 250;
   }
-  
 }
 
 // Calculate the position of the bracket
@@ -170,7 +180,7 @@ function arms(circleX, circleY) {
       push();
       rotate(angle);
       fill(255, 165, 0); // Orange
-      rect(100, -10, 60, 20);
+      rect(100 + random(-3,3), -10 + random(-3,3), 60, 20);
       pop();
     }
   }
@@ -178,14 +188,14 @@ function arms(circleX, circleY) {
 }
 
 // Draw a monitor-like eye
-function drawMonitorEye(circleX,circleY) {
+function drawMonitorEye(circleX, circleY) {
   push();
   fill(0);
   stroke(255);
   line(circleX - 40, circleY - 25, circleX + 40, circleY - 25);
   line(circleX - 40, circleY + 25, circleX + 40, circleY + 25);
   
-  //Calculate the eye's position
+  // Calculate the eye's position
   let vectorX = circleX - 400;
   let vectorY = circleY - 250;
   let vectorLength = dist(400, 250, circleX, circleY);
@@ -193,8 +203,8 @@ function drawMonitorEye(circleX,circleY) {
   let directionY = vectorY / vectorLength;
   
   let eyeDistance = 15; // Distance from the center of the circle
-  eyeOffsetX = directionX * eyeDistance;
-  eyeOffsetY = directionY * eyeDistance;
+  let eyeOffsetX = directionX * eyeDistance;
+  let eyeOffsetY = directionY * eyeDistance;
 
   fill(255, 0, 0);
   noStroke();
@@ -203,13 +213,28 @@ function drawMonitorEye(circleX,circleY) {
   pop();
 }
 
-// Draw a exclamation mark
+// Draw an exclamation mark
 function drawExclamationMark(circleX, circleY) {
   push();
 
   fill(255, 165, 0);
-  ellipse(circleX, circleY - 10, 10, 50);
-  circle(circleX, circleY + 25, 10);
+  ellipse(circleX+random(-3,3), circleY - 10 + random(-3,3), 10, 50);
+  circle(circleX+random(-3,3), circleY + 25 + random(-3,3), 10);
 
+  pop();
+}
+
+// Function to draw a Blue Screen of Death (BSOD)
+function BSOD() {
+  push();
+  translate(400, 250);
+  rectMode(CENTER);
+  fill(0, 0, 255); // Blue background
+  rect(0, 0, 100, 75); // Monitor size
+  
+  fill(255); // White text
+  textSize(10);
+  textAlign(CENTER, CENTER);
+  text(":(\nYour PC ran into a\nproblem and needs\nto restart.\n\n0% complete", 0, 0);
   pop();
 }
