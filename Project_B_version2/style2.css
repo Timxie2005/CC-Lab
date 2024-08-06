@@ -1,0 +1,37 @@
+body {
+    font-family: fantasy;
+    font-size: 30px;
+    text-align: center;
+    color: white;
+    background-color: #002fa7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.fade-in-text {
+    opacity: 0;
+    animation: fadeIn 5s forwards; 
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.back-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: fantasy;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    z-index: 1000; /* Ensure it is above other content */
+}
+

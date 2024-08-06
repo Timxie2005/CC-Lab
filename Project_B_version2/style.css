@@ -1,0 +1,102 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#canvasContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.textBox, .iphone-container, .telegram-container, .history-container {
+    position: relative;
+    z-index: 1;
+    color: white;
+}
+
+h1 {
+    font-size: 300px;
+}
+
+/* Additional styles */
+.textBox {
+    font-family: fantasy;
+    font-size: 30px;
+    width: 100%;
+    text-align: center;
+}
+
+#description {
+    font-size: 30px;
+    color: white;
+    margin: auto;
+    margin-top: 50vh;
+}
+
+.iphone-container {
+    position: relative;
+    top: 50vh;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 400px;
+}
+
+#iphone-text {
+    text-align: center;
+    font-size: 30px;
+    font-family: fantasy;
+    color: white;
+    margin-left: 400px;
+}
+
+.telegram-container {
+    position: relative;
+    top: 50vh;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+#telegram-text {
+    text-align: center;
+    font-size: 30px;
+    font-family: fantasy;
+    color: white;
+    margin-left: 400px;
+}
+
+.history-container {
+    position: relative;
+    top: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+}
+
+#history-text {
+    text-align: center;
+    font-size: 30px;
+    font-family: fantasy;
+    color: white;
+    max-width: 800px;
+    width: 100%;
+}
+
+#cavePainting {
+    display: block;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+}

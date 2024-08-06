@@ -1,0 +1,23 @@
+body{
+    background-color: aqua;
+}
+
+#main{
+    background-color: bisque;
+    width: 900px;
+    margin: auto;
+}
+
+h1{
+    text-align: center;
+}
+
+#canvas-parent{
+    background-color: blue;
+}
+
+p{
+    width: 50%;
+    margin:auto;
+    margin-top: 30px;
+}

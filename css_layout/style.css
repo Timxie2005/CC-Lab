@@ -1,0 +1,44 @@
+body{
+    background-color: aqua;
+}
+
+.special{
+    text-decoration: underline;
+}
+
+#viw{
+    font-weight: bold;
+    background-color: burlywood;
+}
+
+.textbox{
+    background-color: antiquewhite;
+
+    border-color: white;
+    border-width: 3px;
+    border-style: dotted;
+
+    margin: 10px; /*push everything outside the box*/
+    padding: 15px;/* push everything inside the box*/
+    padding-left: 100px;
+}
+
+#canvas-parent{
+    margin-bottom: 100px;
+}
+
+.one{
+    position: absolute;
+    left:500px;
+    top:50px;
+}
+
+.two{
+    position: fixed;
+    right:0px;
+    bottom:0px;
+}
+
+.three{
+    position:relative;
+}
