@@ -1,5 +1,5 @@
 // Variables for sandglass
-let sandGlassImg;
+let hourGlassImg;
 let heightOfScrollDiv;
 let availableScrollSpace;
 let imgTransparency = 150;
@@ -18,7 +18,7 @@ let telegramSketchY = 200;
 
 function preload() {
     morseCode = loadSound("assets/morse.mp3");
-    sandGlassImg = loadImage('assets/sandglass.png');
+    hourGlassImg = loadImage('assets/sandglass.png');
 }
 
 function setup() {
@@ -50,19 +50,19 @@ function draw() {
     let scrollDistance = window.scrollY;
     let scrollPercentage = scrollDistance / availableScrollSpace;
 
-    // Increase the range of sandGlassY to the full height of the canvas
-    let sandGlassY = map(scrollPercentage, 0, 1, 0, height); // Increased the range
+    // Increase the range of hourGlassY to the full height of the canvas
+    let hourGlassY = map(scrollPercentage, 0, 1, 0, height); 
 
-    // Increase the range of sandGlassX to the full width of the canvas
-    let sandGlassXsin = map(scrollPercentage, 0, 1, 0, PI * 4); // Increased to 4 full sine waves
-    let sandGlassX = map(sin(sandGlassXsin), -1, 1, 50, width); // Increased the range to full width
+    // Increase the range of hourGlassX to the full width of the canvas
+    let hourGlassXsin = map(scrollPercentage, 0, 1, 0, PI * 4);
+    let hourGlassX = map(sin(hourGlassXsin), -1, 1, 50, width);
 
     push();
-    translate(sandGlassX, sandGlassY);
+    translate(hourGlassX, hourGlassY);
     scale(0.1);
     tint(255,imgTransparency); // Change the transparency
     if (scrollPercentage < 0.99){
-        image(sandGlassImg, 0 - sandGlassImg.width / 2-500, 0 - sandGlassImg.height / 2+1500); 
+        image(hourGlassImg, 0 - hourGlassImg.width / 2-500, 0 - hourGlassImg.height / 2+1500); 
     }
     pop();
 
