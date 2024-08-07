@@ -1,6 +1,8 @@
-let planeImg;
+// Variables for sandglass
+let sandGlassImg;
 let heightOfScrollDiv;
 let availableScrollSpace;
+let imgTransparency = 150;
 
 // Variables for iphone
 let emojis = ['😊', '😂', '😅', '😢', '👍'];
@@ -11,12 +13,12 @@ let iphoneSketchY = 200;
 // Variables for telegram
 let telegraph;
 let morseCode;
-let telegramSketchX = 10;
+let telegramSketchX = -50;
 let telegramSketchY = 200;
 
 function preload() {
-    morseCode = loadSound("assets/morse_code.mp3");
-    planeImg = loadImage('assets/sandglass.png');
+    morseCode = loadSound("assets/morse.mp3");
+    sandGlassImg = loadImage('assets/sandglass.png');
 }
 
 function setup() {
@@ -48,38 +50,72 @@ function draw() {
     let scrollDistance = window.scrollY;
     let scrollPercentage = scrollDistance / availableScrollSpace;
 
-    // Increase the range of planeY to the full height of the canvas
-    let planeY = map(scrollPercentage, 0, 1, 0, height); // Increased the range
+    // Increase the range of sandGlassY to the full height of the canvas
+    let sandGlassY = map(scrollPercentage, 0, 1, 0, height); // Increased the range
 
-    // Increase the range of planeX to the full width of the canvas
-    let planeXsin = map(scrollPercentage, 0, 1, 0, PI * 8); // Increased to 8 full sine waves
-    let planeX = map(sin(planeXsin), -1, 1, 50, width); // Increased the range to full width
+    // Increase the range of sandGlassX to the full width of the canvas
+    let sandGlassXsin = map(scrollPercentage, 0, 1, 0, PI * 4); // Increased to 4 full sine waves
+    let sandGlassX = map(sin(sandGlassXsin), -1, 1, 50, width); // Increased the range to full width
 
     push();
-    translate(planeX, planeY);
+    translate(sandGlassX, sandGlassY);
     scale(0.1);
-    if (scrollPercentage < 0.98){
-        image(planeImg, 0 - planeImg.width / 2, 0 - planeImg.height / 2); 
-        circle(0, 0, 10);
+    tint(255,imgTransparency); // Change the transparency
+    if (scrollPercentage < 0.99){
+        image(sandGlassImg, 0 - sandGlassImg.width / 2-500, 0 - sandGlassImg.height / 2+1500); 
     }
-    
     pop();
 
-    if (scrollPercentage > 0.37 && scrollPercentage < 0.48) {
+    if (scrollPercentage > 0.3 && scrollPercentage < 0.4) {
         push();
         translate(iphoneSketchX, iphoneSketchY);
         iphone.display();
         pop();
     }
 
-    if(scrollPercentage > 0.6 && scrollPercentage < 0.7){
+    if(scrollPercentage > 0.5 && scrollPercentage < 0.55){
         push();
         translate(telegramSketchX, telegramSketchY);
         telegraph.display();
         pop();
     }
+
+    if(scrollPercentage < 0.01){
+        drawScrollArrow();
+    }
+    
 }
 
+
+function drawScrollArrow() {
+    // Draw arrow
+    push();
+    fill(255); // White color
+    noStroke();
+
+    // Arrow body
+    beginShape();
+    vertex(width / 2 - 10, height - 60); // Left bottom
+    vertex(width / 2 + 10, height - 60); // Right bottom
+    vertex(width / 2, height - 40); // Top
+    endShape(CLOSE);
+
+    // Arrow head
+    triangle(width / 2 - 5, height - 40, width / 2 + 5, height - 40, width / 2, height - 30);
+
+    // Instruction text
+    textSize(16);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    text('Scroll down', width / 2, height - 20);
+
+    pop();
+}
+
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
 
 function mousePressed() {
     iphone.handleMousePress(mouseX, mouseY);
@@ -90,10 +126,7 @@ function mouseReleased() {
     telegraph.release();
 }
 
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-}
-
+// Class for iphone
 class EmojiButton {
     constructor(x, y, w, h, emoji) {
         this.x = x;
@@ -224,6 +257,8 @@ class iPhone {
     }
 }
 
+
+// class for telegram
 class Telegraph {
     constructor(x, y, baseWidth, baseHeight) {
         this.x = x;
@@ -241,6 +276,9 @@ class Telegraph {
         this.drawLever();
         this.drawSupport();
         this.drawKnobs();
+        if (this.leverPressed) {
+            this.drawSignalArcs();
+        }
     }
 
     drawBase() {
@@ -289,10 +327,28 @@ class Telegraph {
         rect(this.x + 100, this.y - 60, 40, 60);
     }
 
+    drawSignalArcs() {
+        push();
+        noFill();
+        stroke(255);
+        strokeWeight(2);
+
+        let arcSpacing = 50;
+        let arcCount = 5;
+        for (let i = 0; i < arcCount; i++) {
+            let x = this.x + this.baseWidth / 2;
+            let y = this.y - 100;
+            let radius = (i + 1) * arcSpacing;
+            arc(x, y, radius, radius, PI, 0, OPEN);
+        }
+        pop();
+    }
+
     press(mx, my) {
-        if (mx > this.x+telegramSketchX && mx < this.x+telegramSketchX + this.baseWidth && my > this.y+telegramSketchY - 50 && my < this.y+telegramSketchY + this.baseHeight) {
+        if (mx > this.x + telegramSketchX && mx < this.x + telegramSketchX + this.baseWidth && my > this.y + telegramSketchY - 50 && my < this.y + telegramSketchY + this.baseHeight) {
             this.leverPressed = true;
             this.leverAngle = radians(8);
+            morseCode.stop();
             morseCode.play();
         }
     }
