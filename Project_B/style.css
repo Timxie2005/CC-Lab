@@ -1,5 +1,7 @@
-body {
-    background-color: #002FA7;
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
 #canvasContainer {
@@ -7,46 +9,40 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     z-index: -1;
 }
 
-.textBox {
+.textBox, .iphone-container, .telegram-container, .history-container {
+    position: relative;
+    z-index: 1;
+    color: white;
     font-family: fantasy;
     font-size: 30px;
-    color: white;
-    width: 100%;
-    text-align: center; 
 }
 
 h1 {
     font-size: 300px;
 }
 
+/* Additional styles */
+.textBox {
+    width: 100%;
+    text-align: center;
+}
+
 #description {
-    position:relative;
     font-size: 30px;
     color: white;
-    margin: auto; 
+    margin: auto;
     margin-top: 50vh;
 }
 
-
-/* The iPhone sector */
 .iphone-container {
-    position: relative;
     top: 50vh;
-    left: 50%; 
-    transform: translateX(-50%); 
-
-    align-items: center;
-}
-
-#iphone-parent {
-    background-color: black;
-    width: 400px;
-    height: 600px;
-    z-index: 1;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 400px;
 }
 
 #iphone-text {
@@ -54,24 +50,16 @@ h1 {
     font-size: 30px;
     font-family: fantasy;
     color: white;
-    margin-left: 400px; 
+    margin-left: 400px;
 }
 
-/* The telegram sector */
 .telegram-container {
-    position: relative;
-    top: 50vh; 
+    top: 50vh;
     left: 50%;
-    transform: translateX(-50%); 
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
-}
-
-#telegram-parent {
-    background-color: black;
-    width: 400px;
-    height: 600px; 
-    z-index: 1;
+    margin-bottom: 100px;
 }
 
 #telegram-text {
@@ -82,16 +70,33 @@ h1 {
     margin-left: 400px;
 }
 
-#text-image {
-    display: block;
-    margin: 20px auto; 
-    max-width: 80%;
-    height: auto; 
+.history-container {
+    top: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 100px;
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%);
 }
 
-#cavePainting{
+#history-text {
+    text-align: center;
+    font-size: 30px;
+    font-family: fantasy;
+    color: white;
+    max-width: 800px;
+    width: 100%; 
+}
+
+#subTitle{
+    font-size: 50px;
+}
+
+#cavePainting {
     display: block;
-    margin: 20px auto; 
+    margin: 20px auto;
     width: 100%;
     max-width: 800px;
     height: auto;
